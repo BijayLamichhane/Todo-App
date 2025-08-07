@@ -12,9 +12,9 @@ export function meta({}: Route.MetaArgs) {
 
 const ImportantTask = () => {
   return (
-    <div>
-      <Dashboard1 />
-    </div>
+    <>
+      
+    </>
   )
 }
 

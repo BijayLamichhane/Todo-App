@@ -13,8 +13,6 @@ const Dashboard1 = () => {
 
         {NavigationDashbord.map((item) => (
           <Link key={item.href} to={item.href} className={`w-full h-[55px] text-gray-500 font-semibold text-xl cursor-pointer hover:bg-red-200 items-center flex p-6 ${pathname === item.href ? 'bg-[#f0e3ff] text-secondary-100 border-r-6 border-secondary' : ''}`}>
-
-
             {item.label}
           </Link>
         ))}
