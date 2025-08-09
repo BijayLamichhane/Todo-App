@@ -51,4 +51,13 @@ export const tasks = [
       important: false
 
     },
+    {
+      id: 4,
+      title: "Task 4",
+      description: "This is the description for this task",
+      date: "08/09/2025",
+      completed: true,
+      important: false
+
+    },
   ];

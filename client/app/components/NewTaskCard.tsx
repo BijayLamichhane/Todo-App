@@ -1,7 +1,7 @@
 
 const NewTaskCard = () => {
   return (
-    <div className="border-2 border-dashed border-gray-300 flex items-center justify-center rounded-lg text-gray-400 cursor-pointer hover:bg-gray-50 h-[260px]">
+    <div className="border-2 border-dashed border-gray-300 flex items-center justify-center rounded-lg text-gray-400 cursor-pointer hover:bg-gray-50 h-[233px]">
             <div className="flex flex-col items-center">
               <svg
                 width="24"
