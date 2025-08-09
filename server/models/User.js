@@ -20,18 +20,6 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'task',
         }
-    ],
-    completedTasks: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'task',
-        }
-    ],
-    importantTasks: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'task',
-        }
     ]
 
 }, {

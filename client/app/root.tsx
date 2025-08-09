@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import Dashboard1 from "./components/Dashboard1";
 import Dashboard2 from "./components/Dashboard2";
+import Navbar from "./components/Navbar";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -34,10 +35,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="relative h-screen">
-        <Dashboard1 />
+      <body className="h-screen flex">
+        <div className="w-[325px] flex-shrink-0">
+          <Dashboard1 />
+        </div>
+        <div className="flex-grow flex justify-center items-start overflow-y-auto bg-gray-50">
+          <main className="flex-1 overflow-y-auto">
+      <div className="mx-auto max-w-6xl p-6">
+        <Navbar />
         {children}
-        <Dashboard2 />
+      </div>
+    </main>
+        </div>
+        <div className="w-[325px] flex-shrink-0">
+          <Dashboard2 />
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>

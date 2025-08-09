@@ -5,7 +5,7 @@ import { ProgressBar } from "./ProgressBar";
 
 const Dashboard2 = () => {
   return (
-    <div className="absolute right-0 top-0 bottom-0 h-full w-[325px] flex flex-col">
+    <div className="h-full w-full flex flex-col">
       <div className="flex items-center justify-center gap-4 p-8">
         <h1 className="font-semibold text-2xl">Hi, User!</h1>
         <img

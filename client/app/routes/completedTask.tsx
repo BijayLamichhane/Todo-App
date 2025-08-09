@@ -1,5 +1,6 @@
-import Dashboard1 from '~/components/Dashboard1';
 import type { Route } from '../+types/root';
+import { tasks } from '~/constants';
+import TasksCard from '~/components/TasksCard';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,9 +13,12 @@ export function meta({}: Route.MetaArgs) {
 
 const CompletedTask = () => {
   return (
-    <>
-      
-    </>
+    <div>
+      {tasks.filter((task) => task.completed).map((task) => (
+        <TasksCard key={task.id} task={task} />
+      ))}
+
+    </div>
   )
 }
 

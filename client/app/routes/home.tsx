@@ -1,5 +1,8 @@
-import Dashboard1 from "~/components/Dashboard1";
+import { useState } from "react";
 import type { Route } from "./+types/home";
+import { tasks } from "~/constants";
+import TasksCard from "~/components/TasksCard";
+import Navbar from "~/components/Navbar";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,6 +11,11 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Home() {
-  return <></>;
+export default function Home() { 
+
+  return (
+    <>
+      <TasksCard />
+    </>
+  );
 }
