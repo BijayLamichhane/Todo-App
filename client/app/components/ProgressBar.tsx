@@ -1,15 +1,6 @@
 import React from "react";
 import { cn } from "../lib/utils";
 
-interface ProgressBarProps {
-  label?: string;
-  completed: number;
-  total: number;
-  className?: string;
-  showRatio?: boolean;
-  variant?: "default" | "success" | "warning" | "danger";
-}
-
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   label = "All tasks",
   completed,
@@ -25,22 +16,22 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
     default: {
       fill: "bg-primary-100",
       glow: "shadow-purple-200",
-      text: "text-gray-700",
+      text: "text-gray-700 dark:text-gray-200",
     },
     success: {
       fill: "bg-green-500",
       glow: "shadow-green-200",
-      text: "text-gray-700",
+      text: "text-gray-700 dark:text-gray-200",
     },
     warning: {
       fill: "bg-yellow-500",
       glow: "shadow-yellow-200",
-      text: "text-gray-700",
+      text: "text-gray-700 dark:text-gray-200",
     },
     danger: {
       fill: "bg-red-500",
       glow: "shadow-red-200",
-      text: "text-gray-700",
+      text: "text-gray-700 dark:text-gray-200",
     },
   };
 
@@ -59,7 +50,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         )}
       </div>
 
-      <div className="relative w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+      <div className="relative w-full h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
         <div
           className={cn(
             "h-full rounded-full transition-all duration-500 ease-out",
@@ -80,7 +71,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 // Example usage component
 export const ProgressBarExample: React.FC = () => {
   return (
-    <div className="p-6 bg-white rounded-lg shadow-sm">
+    <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       <ProgressBar
         label="All tasks"
         completed={2}

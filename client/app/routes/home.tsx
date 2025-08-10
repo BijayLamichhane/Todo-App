@@ -1,8 +1,6 @@
-import { useState } from "react";
 import type { Route } from "./+types/home";
 import { tasks } from "~/constants";
 import TasksCard from "~/components/TasksCard";
-import Navbar from "~/components/Navbar";
 import NewTaskCard from "~/components/NewTaskCard";
 
 export function meta({}: Route.MetaArgs) {

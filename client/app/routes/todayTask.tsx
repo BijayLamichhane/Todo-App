@@ -1,8 +1,9 @@
-import Dashboard1 from "~/components/Dashboard1";
 import type { Route } from "../+types/root";
 import TasksCard from "~/components/TasksCard";
 import { tasks } from "~/constants";
 import NewTaskCard from "~/components/NewTaskCard";
+import { useState } from "react";
+import AddTaskModal from "~/components/AddTaskModal";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,6 +13,8 @@ export function meta({}: Route.MetaArgs) {
 }
 
 const TodayTask = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // Format today's date to match tasks' MM/DD/YYYY format
   const todayString = new Date().toLocaleDateString("en-US", {
     month: "2-digit",
@@ -27,8 +30,15 @@ const TodayTask = () => {
         {todaysTasks.map((task) => (
           <TasksCard key={task.id} {...task} />
         ))}
-        {todaysTasks.length === 0 && <NewTaskCard />}
+        {todaysTasks.length === 0 && (
+          <NewTaskCard onClick={() => setIsModalOpen(true)} />
+        )}
       </div>
+
+      <AddTaskModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   );
 };

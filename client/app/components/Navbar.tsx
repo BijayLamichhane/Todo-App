@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useLocation } from "react-router";
 import { NavigationDashbord, tasks } from "~/constants";
+import AddTaskModal from "./AddTaskModal";
 
 const Navbar = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const currentDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
@@ -11,7 +13,7 @@ const Navbar = () => {
     day: "numeric",
   });
 
-  const pathname = useLocation().pathname
+  const pathname = useLocation().pathname;
 
   return (
     <>
@@ -22,10 +24,10 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search task"
-            className="w-full md:w-72 h-13 bg-white rounded-lg border border-gray-200 px-4 py-2 text-xl focus:outline-none focus:ring-2 focus:ring-primary-100/30"
+            className="w-full md:w-72 h-13 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 px-4 py-2 text-xl focus:outline-none focus:ring-2 focus:ring-primary-100/30 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400"
           />
           <svg
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500"
             width="20"
             height="20"
             viewBox="0 0 24 24"
@@ -41,11 +43,13 @@ const Navbar = () => {
         </div>
 
         {/* Date */}
-        <div className="text-gray-500 text-xl">{currentDate}</div>
+        <div className="text-gray-500 dark:text-gray-300 text-xl">
+          {currentDate}
+        </div>
 
         {/* Notification & Add Task */}
         <div className="flex items-center gap-4">
-          <button className="text-gray-500 hover:text-gray-700">
+          <button className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100">
             <svg
               width="27"
               height="27"
@@ -60,7 +64,10 @@ const Navbar = () => {
               <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
             </svg>
           </button>
-          <button className="bg-purple-600 text-white rounded-lg px-6 py-3 hover:bg-purple-700 transition-colors">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-purple-600 dark:bg-primary-100 text-white rounded-lg px-6 py-3 hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors"
+          >
             Add new task
           </button>
         </div>
@@ -69,15 +76,16 @@ const Navbar = () => {
       {/* Section Header */}
       <div className="mb-12">
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
-          <h2 className="text-2xl font-semibold text-gray-500">
+          <h2 className="text-2xl font-semibold text-gray-500 dark:text-gray-300">
             {NavigationDashbord.map((item) => (
               <span key={item.href}>
-                {pathname === item.href ? item.label : ''}
+                {pathname === item.href ? item.label : ""}
               </span>
-            ))} ({tasks.length} tasks)
+            ))}{" "}
+            ({tasks.length} tasks)
           </h2>
           <div className="flex items-center">
-            <select className="border rounded-lg px-4 py-3 text-gray-700 bg-white">
+            <select className="border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-100/30">
               <option>Sort by</option>
               <option>Date (newest)</option>
               <option>Date (oldest)</option>
@@ -91,7 +99,7 @@ const Navbar = () => {
         <div className="flex space-x-2 mb-4">
           <button
             onClick={() => setViewMode("grid")}
-            className={`p-2 rounded ${viewMode === "grid" ? "bg-gray-200" : ""}`}
+            className={`p-2 rounded transition-colors ${viewMode === "grid" ? "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"}`}
           >
             <svg
               width="24"
@@ -111,7 +119,7 @@ const Navbar = () => {
           </button>
           <button
             onClick={() => setViewMode("list")}
-            className={`p-2 rounded ${viewMode === "list" ? "bg-gray-200" : ""}`}
+            className={`p-2 rounded transition-colors ${viewMode === "list" ? "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"}`}
           >
             <svg
               width="24"
@@ -130,6 +138,11 @@ const Navbar = () => {
           </button>
         </div>
       </div>
+
+      <AddTaskModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   );
 };

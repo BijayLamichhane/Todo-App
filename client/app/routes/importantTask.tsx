@@ -1,4 +1,3 @@
-import Dashboard1 from "~/components/Dashboard1";
 import type { Route } from "../+types/root";
 import TasksCard from "~/components/TasksCard";
 import { tasks } from "~/constants";
