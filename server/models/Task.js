@@ -9,21 +9,21 @@ const taskSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    completed: {
+    isCompleted: {
         type: Boolean,
         default: false,
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'User',
     },
-    important: {
+    isImportant: {
         type: Boolean,
         default: false,
     },
     date: {
-        type: Date,
-        default: Date.now,
+        type: String,
+        required: true,
     }
 }, {
     timestamps: true,

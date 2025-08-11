@@ -182,7 +182,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
             {/* Description Input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Description (optional)
+                Description
               </label>
               <textarea
                 value={formData.description}

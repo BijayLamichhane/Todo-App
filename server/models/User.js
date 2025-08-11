@@ -14,13 +14,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-    },
-    tasks: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'task',
-        }
-    ]
+    }
 
 }, {
     timestamps: true,

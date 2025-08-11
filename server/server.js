@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import userRoutes from './routes/user.routes.js'
+import taskRoutes from './routes/task.routes.js'
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/user', userRoutes);
+app.use('/api/task', taskRoutes);
 
 
 app.get('/', (req, res) => {
