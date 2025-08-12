@@ -13,6 +13,8 @@ import Dashboard1 from "./components/Dashboard1";
 import Dashboard2 from "./components/Dashboard2";
 import Navbar from "./components/Navbar";
 import { DarkModeProvider } from "./lib/darkModeContext";
+import { Toaster } from "sonner";
+import { AppProvider } from "./context/AppContext";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -38,6 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="h-screen flex flex-col lg:flex-row">
         <DarkModeProvider>
+        <AppProvider>
           <div className="w-full lg:w-[325px] flex-shrink-0 order-1 lg:order-1">
             <Dashboard1 />
           </div>
@@ -48,10 +51,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 {children}
               </div>
             </main>
+            <Toaster />
           </div>
           <div className="w-full lg:w-[325px] flex-shrink-0 order-2 lg:order-3">
             <Dashboard2 />
           </div>
+        </AppProvider>
         </DarkModeProvider>
         <ScrollRestoration />
         <Scripts />

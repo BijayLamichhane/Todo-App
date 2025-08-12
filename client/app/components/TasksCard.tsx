@@ -1,11 +1,12 @@
+import type { Task } from "~/types";
 import { Separator } from "./ui/separator";
 
-const TasksCard = ({ id, title, description, date, completed }: TaskProps) => {
+const TasksCard = ({ _id, title, description, date, completed }: Task) => {
   return (
     <>
       {/* Task Cards */}
       <div
-        key={id}
+        key={_id}
         className="rounded-lg shadow-lg dark:shadow-gray-900/50 p-4 w-full h-58 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700"
       >
         {/* Task Content */}

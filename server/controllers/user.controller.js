@@ -68,3 +68,25 @@ export const loginUser = async (req, res) => {
     return res.status(500).json({success: false, message: error.message})
   }
 }
+
+export const getUserData = async (req, res) => {
+  try {
+    const {user} = req;
+    return res.status(200).json({success: true, user})
+
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({success: false, message: error.message})
+
+  }
+}
+
+export const validateToken = async (req, res) => {
+  try {
+    const {user} = req;
+    return res.status(200).json({success: true, user})
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({success: false, message: error.message})
+  }
+}

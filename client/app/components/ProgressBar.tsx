@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "../lib/utils";
+import type { ProgressBarProps } from "~/types";
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   label = "All tasks",
