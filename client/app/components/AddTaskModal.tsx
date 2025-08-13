@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import { toast } from "sonner";
+import { useAppContext } from "~/context/useAppContext";
+import type { AppContextType } from "~/types";
 
 interface AddTaskModalProps {
   isOpen: boolean;
@@ -8,6 +11,11 @@ interface AddTaskModalProps {
 const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const {axios, isLoading, setIsLoading} = useAppContext() as AppContextType;
+
+
+
+
 
   const [formData, setFormData] = useState({
     title: "",
@@ -78,12 +86,26 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+
     // Handle form submission here
-    console.log("Form submitted:", formData);
-    resetFormData(); // Reset form data after submission
-    onClose();
+    try {
+      const {data} = await axios.post('api/task/add', formData);
+      if(data.success){
+        toast(data.message)
+        resetFormData(); // Reset form data after submission
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('An unexpected error occurred');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -229,8 +251,10 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
             <button
               type="submit"
               className="w-full bg-primary-100 text-white py-3 px-6 rounded-lg font-medium hover:bg-purple-600 transition-colors duration-200"
+              disabled={isLoading}
             >
-              Add a task
+              {isLoading ? "Adding..." : "Add Task"}
+
             </button>
           </form>
         </div>

@@ -27,9 +27,9 @@ export interface Task {
     title: string;
     description: string;
     date: string;
-    completed: boolean;
-    important: boolean;
-    user: string;
+    isCompleted: boolean;
+    isImportant: boolean;
+    user?: string;
 }
 
 export interface AppContextType {
@@ -47,6 +47,8 @@ export interface AppContextType {
     logOut: () => void;
     fetchTasks: () => Promise<void>;
     fetchUser: () => Promise<void>;
+    setIsLoading: (isLoading: boolean) => void;
+
     
     // Utilities
     navigate: any; // or proper type

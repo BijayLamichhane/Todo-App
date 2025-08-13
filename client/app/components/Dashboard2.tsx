@@ -3,15 +3,19 @@ import { Switch } from "~/components/ui/switch";
 import { Separator } from "./ui/separator";
 import { ProgressBar } from "./ProgressBar";
 import { useDarkMode } from "~/lib/darkModeContext";
+import { useAppContext } from "~/context/useAppContext";
+import type { AppContextType } from "~/types";
 
 const Dashboard2 = () => {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const { user } = useAppContext() as AppContextType;
+
 
   return (
     <div className="h-full w-full flex flex-col bg-white dark:bg-gray-800">
       <div className="flex items-center justify-center gap-4 p-6 lg:p-8">
         <h1 className="font-semibold text-xl lg:text-2xl text-gray-800 dark:text-white">
-          Hi, User!
+          Hi, {user?.name || "User"}!
         </h1>
         <img
           src="/dummy-avatar.jpg"

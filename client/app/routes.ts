@@ -1,4 +1,4 @@
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+import { type RouteConfig, index, layout, route } from "@react-router/dev/routes";
 
 export default [
   index("routes/home.tsx"),
@@ -6,4 +6,7 @@ export default [
   route("/incomplete-tasks", "routes/incompletedTask.tsx"),
   route("/important-tasks", "routes/importantTask.tsx"),
   route("/completed-tasks", "routes/completedTask.tsx"),
+  layout("./_auth/layout.tsx", [
+    route("/login", "./_auth/login.tsx"),
+  ]),
 ] satisfies RouteConfig;
