@@ -17,6 +17,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const fetchUser = async () => {
     try {
@@ -104,6 +105,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading,
     error,
     setError,
+    viewMode,
+    setViewMode,
+
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

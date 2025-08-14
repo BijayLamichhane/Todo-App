@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { NavigationDashbord, tasks } from "~/constants";
 import AddTaskModal from "./AddTaskModal";
+import { useAppContext } from "~/context/useAppContext";
+import type { AppContextType } from "~/types";
 
 const Navbar = () => {
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const { viewMode, setViewMode } = useAppContext() as AppContextType;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const currentDate = new Date().toLocaleDateString("en-US", {
+  const currentDate = useMemo(
+  () => new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
-  });
+  }),
+  []
+);
 
   const pathname = useLocation().pathname;
 
@@ -24,6 +30,8 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search task"
+            value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full md:w-72 h-13 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 px-4 py-2 text-xl focus:outline-none focus:ring-2 focus:ring-primary-100/30 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400"
           />
           <svg
@@ -77,11 +85,7 @@ const Navbar = () => {
       <div className="mb-12">
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
           <h2 className="text-2xl font-semibold text-gray-500 dark:text-gray-300">
-            {NavigationDashbord.map((item) => (
-              <span key={item.href}>
-                {pathname === item.href ? item.label : ""}
-              </span>
-            ))}{" "}
+            {NavigationDashbord.find((item) => item.href === pathname)?.label || ""}{" "}
             ({tasks.length} tasks)
           </h2>
           <div className="flex items-center">

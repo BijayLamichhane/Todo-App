@@ -5,6 +5,7 @@ import NewTaskCard from "~/components/NewTaskCard";
 import { useState } from "react";
 import AddTaskModal from "~/components/AddTaskModal";
 import { useAppContext } from "~/context/useAppContext";
+import type { AppContextType } from "~/types";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,10 +16,10 @@ export function meta({}: Route.MetaArgs) {
 
 const TodayTask = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { tasks: contextTasks } = useAppContext();
+  const { viewMode } = useAppContext() as AppContextType;
   
   // Use context tasks instead of static tasks
-  const tasksToUse = contextTasks.length > 0 ? contextTasks : tasks;
+  const tasksToUse = tasks.length > 0 ? tasks : [];
 
   // Format today's date to match tasks' MM/DD/YYYY format
   const todayString = new Date().toLocaleDateString("en-US", {
@@ -31,9 +32,10 @@ const TodayTask = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-4"}>
         {todaysTasks.map((task) => (
-          <TasksCard key={task._id} task={task} />
+          <TasksCard key={task._id} task={task} viewMode={viewMode} />
+
         ))}
         {todaysTasks.length === 0 && (
           <NewTaskCard onClick={() => setIsModalOpen(true)} />

@@ -39,6 +39,8 @@ export interface AppContextType {
     tasks: Task[];
     isLoading: boolean;
     error: string | null;
+    viewMode: "grid" | "list";
+
     
     // Actions
     setToken: (token: string | null) => void;
@@ -48,6 +50,7 @@ export interface AppContextType {
     fetchTasks: () => Promise<void>;
     fetchUser: () => Promise<void>;
     setIsLoading: (isLoading: boolean) => void;
+    setViewMode: (viewMode: "grid" | "list") => void;
 
     
     // Utilities
