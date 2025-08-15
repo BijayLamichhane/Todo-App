@@ -7,15 +7,13 @@ export const addTask = async (req, res) => {
     const { title, description, date, isCompleted, isImportant } = req.body;
 
     if (!title || !description || !date) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Please fill all the required fields",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all the required fields",
+      });
     }
 
-    await Task.create({
+    const newTask = await Task.create({
       title,
       description,
       date,
@@ -24,9 +22,11 @@ export const addTask = async (req, res) => {
       user: userId,
     });
 
-    res
-      .status(201)
-      .json({ success: true, message: "Task created successfully" });
+    res.status(201).json({
+      success: true,
+      message: "Task created successfully",
+      task: newTask, // <-- return the new task
+    });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ success: false, message: error.message });
@@ -104,9 +104,11 @@ export const updateTask = async (req, res) => {
     }
 
     await task.save();
-    res
-      .status(200)
-      .json({ success: true, message: "Task updated successfully" });
+    res.status(200).json({
+      success: true,
+      message: "Task updated successfully",
+      task, // <-- return the updated task
+    });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ success: false, message: error.message });

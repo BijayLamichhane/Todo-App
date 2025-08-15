@@ -1,5 +1,4 @@
 import type { Route } from "./+types/home";
-import { tasks } from "~/constants";
 import TasksCard from "~/components/TasksCard";
 import NewTaskCard from "~/components/NewTaskCard";
 import { useAppContext } from "~/context/useAppContext";
@@ -13,16 +12,32 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  const { viewMode } = useAppContext() as AppContextType;
-  console.log(viewMode);
+  const { viewMode, tasks } = useAppContext() as AppContextType;
+
+  // Filter out any null/undefined or incomplete tasks
+  const safeTasks = Array.isArray(tasks)
+    ? tasks.filter(
+        (task): task is NonNullable<typeof task> =>
+          Boolean(task && task._id && "isCompleted" in task)
+      )
+    : [];
+
   return (
     <>
-    {tasks.length === 0 && <NewTaskCard />}
-      <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-4"}>
-        {tasks.map((task) => (
+      {safeTasks.length === 0 && <NewTaskCard />}
+
+      <div
+        className={
+          viewMode === "grid"
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            : "flex flex-col gap-4"
+        }
+      >
+        {safeTasks.map((task) => (
           <TasksCard key={task._id} task={task} viewMode={viewMode} />
         ))}
-        {tasks.length > 0 && <NewTaskCard />}
+
+        {safeTasks.length > 0 && <NewTaskCard />}
       </div>
     </>
   );

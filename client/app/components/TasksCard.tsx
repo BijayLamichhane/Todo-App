@@ -17,11 +17,20 @@ const TasksCard = ({
   task: Task;
   viewMode: "grid" | "list";
 }) => {
+  // Add safety check
+  if (!task || typeof task !== 'object') {
+    console.error('TasksCard received invalid task:', task);
+    return null;
+  }
+
   const { _id, title, description, date, isCompleted, isImportant } = task;
-  const [isCompletedState, setIsCompletedState] =
-    useState<boolean>(isCompleted);
-  const [isImportantState, setIsImportantState] =
-    useState<boolean>(isImportant);
+  
+  // Add fallback values for safety
+  const safeIsCompleted = isCompleted ?? false;
+  const safeIsImportant = isImportant ?? false;
+  
+  const [isCompletedState, setIsCompletedState] = useState<boolean>(safeIsCompleted);
+  const [isImportantState, setIsImportantState] = useState<boolean>(safeIsImportant);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleCompleted = () => {

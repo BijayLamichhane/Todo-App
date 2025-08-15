@@ -41,21 +41,23 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
   // Pre-fill form if editing
   useEffect(() => {
-    if (isOpen) {
-      setIsVisible(true);
-      if (initialData) {
-        setFormData({
-          title: initialData.title,
-          date: initialData.date,
-          description: initialData.description,
-          isImportant: initialData.isImportant,
-          isCompleted: initialData.isCompleted,
-        });
-      } else {
-        resetFormData();
-      }
-    } else {
+    if (!isOpen) {
       setIsVisible(false);
+      return;
+    }
+
+    setIsVisible(true);
+
+    if (initialData && typeof initialData === "object") {
+      setFormData({
+        title: initialData.title ?? "",
+        date: initialData.date ?? "",
+        description: initialData.description ?? "",
+        isImportant: initialData.isImportant ?? false,
+        isCompleted: initialData.isCompleted ?? false,
+      });
+    } else {
+      resetFormData();
     }
   }, [isOpen, initialData]);
 
@@ -79,7 +81,10 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
   // Click outside close
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         onClose();
       }
     };
@@ -99,7 +104,15 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
       let response;
       if (initialData) {
         // Edit task
-        response = await axios.put(`/api/task/${initialData._id}`, formData);
+        response = await axios.post(`/api/task/update`, {
+          id: initialData._id,
+          ...formData,
+        });
+        if (response.data.success) {
+          toast.success(response.data.message);
+        } else {
+          toast.error(response.data.message);
+        }
       } else {
         // Add new task
         response = await axios.post("/api/task/add", formData);
@@ -112,7 +125,9 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
         onClose();
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "An unexpected error occurred");
+      toast.error(
+        error instanceof Error ? error.message : "An unexpected error occurred"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -127,7 +142,9 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
   return (
     <div
       className={`fixed inset-0 z-50 transition-all duration-300 ease-in-out ${
-        isVisible ? "opacity-100 backdrop-blur-sm" : "opacity-0 backdrop-blur-none"
+        isVisible
+          ? "opacity-100 backdrop-blur-sm"
+          : "opacity-0 backdrop-blur-none"
       }`}
       style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
     >
@@ -147,7 +164,14 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
               onClick={onClose}
               className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
@@ -193,7 +217,9 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("description", e.target.value)
+                }
                 placeholder="e.g, study for the test"
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-100/30 bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
@@ -206,7 +232,9 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 <input
                   type="checkbox"
                   checked={formData.isImportant}
-                  onChange={(e) => handleInputChange("isImportant", e.target.checked)}
+                  onChange={(e) =>
+                    handleInputChange("isImportant", e.target.checked)
+                  }
                   className="w-4 h-4 text-primary-100 border-gray-300 dark:border-gray-600 rounded"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -217,7 +245,9 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 <input
                   type="checkbox"
                   checked={formData.isCompleted}
-                  onChange={(e) => handleInputChange("isCompleted", e.target.checked)}
+                  onChange={(e) =>
+                    handleInputChange("isCompleted", e.target.checked)
+                  }
                   className="w-4 h-4 text-primary-100 border-gray-300 dark:border-gray-600 rounded"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -237,8 +267,8 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   ? "Saving..."
                   : "Adding..."
                 : initialData
-                ? "Save Changes"
-                : "Add Task"}
+                  ? "Save Changes"
+                  : "Add Task"}
             </button>
           </form>
         </div>
