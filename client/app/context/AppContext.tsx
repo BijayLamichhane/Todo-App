@@ -82,6 +82,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [token]);
 
+
+
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     if (storedToken) {

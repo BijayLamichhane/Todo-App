@@ -1,4 +1,4 @@
-import type { Task } from "~/types";
+import type { AppContextType, Task } from "~/types";
 import { Separator } from "./ui/separator";
 import {
   DropdownMenu,
@@ -7,8 +7,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddTaskModal from "./AddTaskModal";
+import { useAppContext } from "~/context/useAppContext";
+import { toast } from "sonner";
+import { fetchTaskData } from "~/services/fetchTask";
 
 const TasksCard = ({
   task,
@@ -24,6 +27,7 @@ const TasksCard = ({
   }
 
   const { _id, title, description, date, isCompleted, isImportant } = task;
+  const {axios, setTasks, tasks} = useAppContext() as AppContextType;
   
   // Add fallback values for safety
   const safeIsCompleted = isCompleted ?? false;
@@ -33,13 +37,53 @@ const TasksCard = ({
   const [isImportantState, setIsImportantState] = useState<boolean>(safeIsImportant);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const toggleCompleted = () => {
-    setIsCompletedState(!isCompletedState);
+  const toggleCompleted = async () => {
+    try {
+      const {data} = await axios.post('/api/task/update', {
+        id: _id,
+        isCompleted: !isCompletedState,
+      })
+      if(data.success) {
+        toast.success('Task completion status updated');
+        setIsCompletedState(!isCompletedState);
+      }
+    } catch (error) {
+      toast.error('Failed to update task completion status');
+
+    }
   };
 
-  const toggleImportant = () => {
-    setIsImportantState(!isImportantState);
+  const toggleImportant = async () => {
+    try {
+      const {data} = await axios.post('/api/task/update', {
+        id: _id,
+        isImportant: !isImportantState,
+      })
+      if(data.success) {
+        toast.success('Task importance status updated');
+        setIsImportantState(!isImportantState);
+      }
+    } catch (error) {
+      toast.error('Failed to update task importance status');
+    }
   };
+
+  const deleteTask = async () => {
+    try {
+      const {data} = await axios.post('/api/task/delete', {
+        id: _id,
+      })
+      if(data.success) {
+        toast.success('Task deleted');
+        // ✅ update context state so page rerenders
+        setTasks(tasks.filter(task => task._id !== _id));
+      }
+    } catch (error) {
+      toast.error('Failed to delete task');
+    }
+  }
+
+
 
   if (viewMode === "list") {
     return (
@@ -103,7 +147,7 @@ const TasksCard = ({
                 <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
               </svg>
             </button>
-            <button className="hover:text-red-500 dark:hover:text-red-400 transition-colors">
+            <button className="hover:text-red-500 dark:hover:text-red-400 transition-colors" onClick={deleteTask}>
               <svg
                 width="16"
                 height="16"
@@ -228,7 +272,8 @@ const TasksCard = ({
               <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
             </svg>
           </button>
-          <button className="hover:text-red-500 dark:hover:text-red-400 transition-colors">
+          <button className="hover:text-red-500 dark:hover:text-red-400 transition-colors" onClick={deleteTask}>
+
             <svg
               width="16"
               height="16"

@@ -123,6 +123,8 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
         if (onSave) onSave(response.data.task);
         resetFormData();
         onClose();
+        window.location.reload();
+
       }
     } catch (error) {
       toast.error(
@@ -204,7 +206,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 type="text"
                 value={formData.date}
                 onChange={(e) => handleInputChange("date", e.target.value)}
-                placeholder="dd/mm/yyyy"
+                placeholder="mm/dd/yyyy"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-100/30 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 required
               />
@@ -222,6 +224,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 }
                 placeholder="e.g, study for the test"
                 rows={3}
+                maxLength={30}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-100/30 bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
               />
             </div>

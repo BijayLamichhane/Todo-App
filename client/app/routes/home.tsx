@@ -3,6 +3,8 @@ import TasksCard from "~/components/TasksCard";
 import NewTaskCard from "~/components/NewTaskCard";
 import { useAppContext } from "~/context/useAppContext";
 import type { AppContextType } from "~/types";
+import { useState } from "react";
+import AddTaskModal from "~/components/AddTaskModal";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -13,6 +15,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   const { viewMode, tasks } = useAppContext() as AppContextType;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Filter out any null/undefined or incomplete tasks
   const safeTasks = Array.isArray(tasks)
@@ -37,7 +40,15 @@ export default function Home() {
           <TasksCard key={task._id} task={task} viewMode={viewMode} />
         ))}
 
-        {safeTasks.length > 0 && <NewTaskCard />}
+        {safeTasks.length > 0 && (
+          <>
+            <NewTaskCard onClick={() => setIsModalOpen(true)} />
+            <AddTaskModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+            />
+          </>
+        )}
       </div>
     </>
   );

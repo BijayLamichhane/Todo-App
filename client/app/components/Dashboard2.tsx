@@ -5,11 +5,15 @@ import { ProgressBar } from "./ProgressBar";
 import { useDarkMode } from "~/lib/darkModeContext";
 import { useAppContext } from "~/context/useAppContext";
 import type { AppContextType } from "~/types";
+import TodaysTasks from "./TodayTaskCard";
 
 const Dashboard2 = () => {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
-  const { user } = useAppContext() as AppContextType;
+  const { user, tasks } = useAppContext() as AppContextType;
 
+  const taskCount = tasks?.length || 0;
+  const completedTaskCount =
+    tasks?.filter((task) => task.isCompleted).length || 0;
 
   return (
     <div className="h-full w-full flex flex-col bg-white dark:bg-gray-800">
@@ -42,8 +46,8 @@ const Dashboard2 = () => {
       <div className="px-4 py-4 lg:py-6">
         <ProgressBar
           label="All tasks"
-          completed={1}
-          total={2}
+          completed={completedTaskCount}
+          total={taskCount}
           variant="default"
         />
       </div>
@@ -51,12 +55,8 @@ const Dashboard2 = () => {
       <Separator className="my-4" />
       <div className="w-full h-full">
         <h2 className="px-4 text-gray-600 dark:text-gray-300 text-center lg:text-left">
-          No tasks today
+          <TodaysTasks />
         </h2>
-      </div>
-
-      <div className="px-4 mt-4 text-red-500 dark:text-red-400 cursor-pointer hover:text-red-600 dark:hover:text-red-300 text-center mb-6 lg:mb-8">
-        Delete all data
       </div>
     </div>
   );
