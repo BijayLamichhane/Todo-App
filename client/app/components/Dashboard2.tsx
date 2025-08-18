@@ -17,24 +17,26 @@ const Dashboard2 = () => {
 
   return (
     <div className="h-full w-full flex flex-col bg-white dark:bg-gray-800">
-      <div className="flex items-center justify-center gap-4 p-6 lg:p-8">
-        <h1 className="font-semibold text-xl lg:text-2xl text-gray-800 dark:text-white">
+      {/* User Greeting - Responsive layout */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 p-4 sm:p-6 lg:p-8">
+        <h1 className="font-medium sm:font-semibold text-lg sm:text-xl lg:text-2xl text-gray-800 dark:text-white text-center sm:text-left">
           Hi, {user?.name || "User"}!
         </h1>
         <img
           src="/dummy-avatar.jpg"
           alt="User"
-          className="w-12 h-12 lg:w-16 lg:h-16 rounded-full"
+          className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 rounded-full flex-shrink-0"
         />
       </div>
-      <div className="flex items-center space-x-2 justify-between pt-0 pb-0 p-4">
+      
+      {/* Dark Mode Toggle - Responsive spacing */}
+      <div className="flex items-center justify-between px-4 sm:px-6 py-2">
         <Label
           htmlFor="dark-mode"
-          className="text-black/70 dark:text-white/70 text-lg lg:text-xl font-medium"
+          className="text-black/70 dark:text-white/70 text-base sm:text-lg lg:text-xl font-medium"
         >
           Dark Mode
         </Label>
-
         <Switch
           id="dark-mode"
           checked={isDarkMode}
@@ -42,8 +44,8 @@ const Dashboard2 = () => {
         />
       </div>
 
-      {/* Progress Bar Section */}
-      <div className="px-4 py-4 lg:py-6">
+      {/* Progress Bar Section - Responsive padding */}
+      <div className="px-4 sm:px-6 py-3 sm:py-4 lg:py-6">
         <ProgressBar
           label="All tasks"
           completed={completedTaskCount}
@@ -52,9 +54,11 @@ const Dashboard2 = () => {
         />
       </div>
 
-      <Separator className="my-4" />
-      <div className="w-full h-full">
-        <h2 className="px-4 text-gray-600 dark:text-gray-300 text-center lg:text-left">
+      <Separator className="my-3 sm:my-4" />
+      
+      {/* Today's Tasks Section */}
+      <div className="flex-1 px-4 sm:px-6">
+        <h2 className="text-gray-600 dark:text-gray-300 text-center lg:text-left mb-4">
           <TodaysTasks />
         </h2>
       </div>

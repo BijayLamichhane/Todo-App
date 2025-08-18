@@ -38,23 +38,34 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="h-screen flex flex-col lg:flex-row">
+      <body className="h-screen flex flex-col">
         <DarkModeProvider>
         <AppProvider>
-          <div className="w-full lg:w-[325px] flex-shrink-0 order-1 lg:order-1">
-            <Dashboard1 />
-          </div>
-          <div className="flex-grow flex justify-center items-start overflow-y-auto bg-gray-50 dark:bg-gray-900 order-3 lg:order-2">
-            <main className="flex-1 overflow-y-auto">
-              <div className="mx-auto max-w-6xl p-4 lg:p-6">
-                <Navbar />
-                {children}
+          {/* Mobile-first responsive layout */}
+          <div className="flex flex-col lg:flex-row h-full">
+            {/* Dashboard1 - Hidden on mobile, sidebar on desktop */}
+            <div className="hidden lg:block lg:w-[325px] lg:flex-shrink-0">
+              <Dashboard1 />
+            </div>
+            
+            {/* Main content area */}
+            <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+                <main className="h-full">
+                  <div className="mx-auto max-w-7xl p-3 sm:p-4 lg:p-6">
+                    <Navbar />
+                    {children}
+                  </div>
+                </main>
+                <Toaster />
               </div>
-            </main>
-            <Toaster />
-          </div>
-          <div className="w-full lg:w-[325px] flex-shrink-0 order-2 lg:order-3">
-            <Dashboard2 />
+              
+              {/* Dashboard2 - Bottom on mobile, right sidebar on desktop */}
+              <div className="lg:w-[325px] lg:flex-shrink-0 order-first lg:order-last">
+                <Dashboard2 />
+              </div>
+            </div>
           </div>
         </AppProvider>
         </DarkModeProvider>

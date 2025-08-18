@@ -6,9 +6,16 @@ import { useAppContext } from "~/context/useAppContext";
 import type { AppContextType } from "~/types";
 
 const Navbar = () => {
-  const { viewMode, setViewMode, tasks, setSortedTasks, searchQuery, setSearchQuery, sortBy, setSortBy } = useAppContext() as AppContextType;
-
-
+  const {
+    viewMode,
+    setViewMode,
+    tasks,
+    setSortedTasks,
+    searchQuery,
+    setSearchQuery,
+    sortBy,
+    setSortBy,
+  } = useAppContext() as AppContextType;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -30,33 +37,34 @@ const Navbar = () => {
   const isIncompleted = safeTasks.filter((task) => !task.isCompleted);
   const isImportant = safeTasks.filter((task) => task.isImportant);
 
-
   const totalTasks = safeTasks.length;
   const totalCompletedTasks = isCompleted.length;
   const totalIncompletedTasks = isIncompleted.length;
   const totalImportantTasks = isImportant.length;
-  const totalTodaysTasks = safeTasks.filter((task) => task.date === todayString).length;
-
+  const totalTodaysTasks = safeTasks.filter(
+    (task) => task.date === todayString
+  ).length;
 
   const taskMap: Record<string, typeof totalTasks> = {
-  "/important-tasks": totalImportantTasks,
-  "/completed-tasks": totalCompletedTasks,
-  "/incomplete-tasks": totalIncompletedTasks,
-  "/today-tasks": totalTodaysTasks,
-};
+    "/important-tasks": totalImportantTasks,
+    "/completed-tasks": totalCompletedTasks,
+    "/incomplete-tasks": totalIncompletedTasks,
+    "/today-tasks": totalTodaysTasks,
+  };
 
-const totalTasksLength = taskMap[pathname] ?? totalTasks;
+  const totalTasksLength = taskMap[pathname] ?? totalTasks;
 
   const currentDate = useMemo(
-  () => new Date().toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }),
-  []
-);
+    () =>
+      new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+    []
+  );
 
-useEffect(() => {
+  useEffect(() => {
     filterAndSortTasks();
   }, [tasks, searchQuery, sortBy]);
 
@@ -67,10 +75,14 @@ useEffect(() => {
 
     switch (sortBy) {
       case "Date (newest)":
-        filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        filtered.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
         break;
       case "Date (oldest)":
-        filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        filtered.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
         break;
       case "Completed":
         filtered.sort((a, b) => Number(b.isCompleted) - Number(a.isCompleted));
@@ -88,26 +100,25 @@ useEffect(() => {
     }
 
     setSortedTasks(filtered);
-  }
-
+  };
 
   return (
     <>
-      {/* Top Bar */}
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        {/* Search Bar */}
-        <div className="relative w-full md:w-auto">
+      {/* Top Bar - Responsive layout */}
+      <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
+        {/* Search Bar - Full width on mobile */}
+        <div className="relative w-full sm:w-auto order-2 sm:order-1">
           <input
             type="text"
             placeholder="Search task"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full md:w-72 h-13 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 px-4 py-2 text-xl focus:outline-none focus:ring-2 focus:ring-primary-100/30 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400"
+            className="w-full sm:w-64 md:w-72 h-11 sm:h-13 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 px-4 py-2 text-base sm:text-xl focus:outline-none focus:ring-2 focus:ring-primary-100/30 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400"
           />
           <svg
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500"
-            width="20"
-            height="20"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -120,64 +131,77 @@ useEffect(() => {
           </svg>
         </div>
 
-        {/* Date */}
-        <div className="text-gray-500 dark:text-gray-300 text-xl">
+        {/* Date - Centered on mobile */}
+        <div className="text-gray-500 dark:text-gray-300 text-lg sm:text-xl text-center sm:text-left order-1 sm:order-2">
           {currentDate}
         </div>
 
-        {/* Notification & Add Task */}
-        <div className="flex items-center gap-4">
-
+        {/* Actions - Responsive layout */}
+        <div className="flex items-center justify-center sm:justify-end gap-3 sm:gap-4 order-3">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-purple-600 dark:bg-primary-100 text-white rounded-lg px-6 py-3 hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors"
-          >
-            Add new task
-          </button>
-        </div>
-      </div>
-
-      {/* Section Header */}
-      <div className="mb-12">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
-          <h2 className="text-2xl font-semibold text-gray-500 dark:text-gray-300">
-            {NavigationDashbord.find((item) => item.href === pathname)?.label || ""}{" "}
-            ({totalTasksLength} tasks)
-
-          </h2>
-          {pathname !== "/today-tasks" && <div className="flex items-center">
-
-            <select className="border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-100/30" onChange={(e) => setSortBy(e.target.value)}>
-
-              <option>Default</option>
-              <option>Date (newest)</option>
-              <option>Date (oldest)</option>
-              {pathname !== "/completed-tasks" && pathname !== "/incomplete-tasks" && <option>Completed</option>}
-
-              {pathname !== "/important-tasks" && <option>Important</option>}
-              {pathname !== "/incomplete-tasks" && pathname !== "/completed-tasks" && <option>Incomplete</option>}
-
-
-
-            </select>
-          </div>}
-        </div>
-
-        {/* View Toggle */}
-        <div className="flex space-x-2 mb-4">
-          <button
-            onClick={() => setViewMode("grid")}
-            className={`p-2 rounded transition-colors ${viewMode === "grid" ? "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"}`}
+            className="p-2 sm:p-3 bg-primary-100 text-white rounded-lg hover:bg-purple-600 transition-colors"
           >
             <svg
-              width="24"
-              height="24"
+              width="18"
+              height="18"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Controls Section - Responsive layout */}
+      <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-4">
+        {/* Sort and Filter - Responsive layout */}
+        {pathname !== "/today-tasks" && (
+          <div className="flex flex-col xs:flex-row gap-2 xs:gap-4 order-2 sm:order-1">
+            {/* Sort Dropdown */}
+            <select
+              className="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary-100/30"
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              {" "}
+              <option>Default</option> <option>Date (newest)</option>
+              <option>Date (oldest)</option>{" "}
+              {pathname !== "/completed-tasks" &&
+                pathname !== "/incomplete-tasks" && (
+                  <option>Completed</option>
+                )}{" "}
+              {pathname !== "/important-tasks" && <option>Important</option>}{" "}
+              {pathname !== "/incomplete-tasks" &&
+                pathname !== "/completed-tasks" && (
+                  <option>Incomplete</option>
+                )}{" "}
+            </select>
+          </div>
+        )}
+
+        {/* View Toggle - Centered on mobile */}
+        <div className="flex justify-center sm:justify-end space-x-2 order-1 sm:order-2">
+          <button
+            onClick={() => setViewMode("grid")}
+            className={`p-2 rounded transition-colors ${
+              viewMode === "grid"
+                ? "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200"
+                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+            }`}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
             >
               <rect width="7" height="7" x="3" y="3" rx="1" />
               <rect width="7" height="7" x="14" y="3" rx="1" />
@@ -187,21 +211,26 @@ useEffect(() => {
           </button>
           <button
             onClick={() => setViewMode("list")}
-            className={`p-2 rounded transition-colors ${viewMode === "list" ? "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"}`}
+            className={`p-2 rounded transition-colors ${
+              viewMode === "list"
+                ? "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200"
+                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+            }`}
           >
             <svg
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
             >
-              <line x1="3" x2="21" y1="6" y2="6" />
-              <line x1="3" x2="21" y1="12" y2="12" />
-              <line x1="3" x2="21" y1="18" y2="18" />
+              <line x1="8" x2="21" y1="6" y2="6" />
+              <line x1="8" x2="21" y1="12" y2="12" />
+              <line x1="8" x2="21" y1="18" y2="18" />
+              <line x1="3" x2="3.01" y1="6" y2="6" />
+              <line x1="3" x2="3.01" y1="12" y2="12" />
+              <line x1="3" x2="3.01" y1="18" y2="18" />
             </svg>
           </button>
         </div>
