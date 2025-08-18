@@ -14,12 +14,12 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  const { viewMode, tasks } = useAppContext() as AppContextType;
+  const { viewMode, sortedTasks } = useAppContext() as AppContextType;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Filter out any null/undefined or incomplete tasks
-  const safeTasks = Array.isArray(tasks)
-    ? tasks.filter(
+  const safeTasks = Array.isArray(sortedTasks)
+    ? sortedTasks.filter(
         (task): task is NonNullable<typeof task> =>
           Boolean(task && task._id && "isCompleted" in task)
       )

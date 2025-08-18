@@ -40,6 +40,9 @@ export interface AppContextType {
     isLoading: boolean;
     error: string | null;
     viewMode: "grid" | "list";
+    sortedTasks: Task[];
+    searchQuery: string;
+    sortBy: string;
 
     
     // Actions
@@ -51,7 +54,9 @@ export interface AppContextType {
     fetchUser: () => Promise<void>;
     setIsLoading: (isLoading: boolean) => void;
     setViewMode: (viewMode: "grid" | "list") => void;
-
+    setSortedTasks: (sortedTasks: Task[]) => void;
+    setSearchQuery: (searchQuery: string) => void;
+    setSortBy: (sortBy: string) => void;
     
     // Utilities
     navigate: any; // or proper type

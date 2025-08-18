@@ -11,10 +11,10 @@ export function meta({}: Route.MetaArgs) {
 }
 
 const CompletedTask = () => {
-  const { viewMode, tasks } = useAppContext() as AppContextType;
+  const { viewMode, sortedTasks } = useAppContext() as AppContextType;
 
-  const completedTasks = Array.isArray(tasks)
-    ? tasks.filter(
+  const completedTasks = Array.isArray(sortedTasks)
+    ? sortedTasks.filter(
         (task): task is NonNullable<typeof task> =>
           Boolean(task && task.isCompleted && task._id)
       )

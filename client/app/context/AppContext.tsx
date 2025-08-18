@@ -18,6 +18,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [sortedTasks, setSortedTasks] = useState<Task[]>(tasks);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("Default");
+
 
   const fetchUser = async () => {
     try {
@@ -109,6 +113,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setError,
     viewMode,
     setViewMode,
+    sortedTasks,
+    setSortedTasks,
+    searchQuery,
+    setSearchQuery,
+    sortBy,
+    setSortBy,
 
   };
 

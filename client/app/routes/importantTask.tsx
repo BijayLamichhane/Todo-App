@@ -12,11 +12,11 @@ export function meta({}: Route.MetaArgs) {
 
 
 const ImportantTask = () => {
-  const { viewMode, tasks } = useAppContext() as AppContextType;
+  const { viewMode, sortedTasks } = useAppContext() as AppContextType;
 
   // Filter out any null/undefined or incomplete tasks
-  const safeTasks = Array.isArray(tasks)
-    ? tasks.filter(
+  const safeTasks = Array.isArray(sortedTasks)
+    ? sortedTasks.filter(
         (task): task is NonNullable<typeof task> =>
           Boolean(task && task._id && "isCompleted" in task)
       )

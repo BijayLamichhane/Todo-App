@@ -15,11 +15,11 @@ export function meta({}: Route.MetaArgs) {
 
 const TodayTask = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { viewMode, tasks } = useAppContext() as AppContextType;
+  const { viewMode, sortedTasks } = useAppContext() as AppContextType;
 
   // Ensure tasks array is valid and filter out null/undefined entries
-  const safeTasks = Array.isArray(tasks)
-    ? tasks.filter(
+  const safeTasks = Array.isArray(sortedTasks)
+    ? sortedTasks.filter(
         (task): task is NonNullable<typeof task> =>
           Boolean(task && task._id && "isCompleted" in task && "date" in task)
       )

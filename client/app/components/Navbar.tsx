@@ -1,14 +1,51 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
-import { NavigationDashbord, tasks } from "~/constants";
+import { NavigationDashbord } from "~/constants";
 import AddTaskModal from "./AddTaskModal";
 import { useAppContext } from "~/context/useAppContext";
 import type { AppContextType } from "~/types";
 
 const Navbar = () => {
-  const { viewMode, setViewMode } = useAppContext() as AppContextType;
+  const { viewMode, setViewMode, tasks, setSortedTasks, searchQuery, setSearchQuery, sortBy, setSortBy } = useAppContext() as AppContextType;
+
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+
+  const pathname = useLocation().pathname;
+
+  const safeTasks = Array.isArray(tasks)
+    ? tasks.filter((task): task is NonNullable<typeof task> =>
+        Boolean(task && task._id && "isCompleted" in task && "date" in task)
+      )
+    : [];
+
+  const todayString = new Date().toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  });
+
+  const isCompleted = safeTasks.filter((task) => task.isCompleted);
+  const isIncompleted = safeTasks.filter((task) => !task.isCompleted);
+  const isImportant = safeTasks.filter((task) => task.isImportant);
+
+
+  const totalTasks = safeTasks.length;
+  const totalCompletedTasks = isCompleted.length;
+  const totalIncompletedTasks = isIncompleted.length;
+  const totalImportantTasks = isImportant.length;
+  const totalTodaysTasks = safeTasks.filter((task) => task.date === todayString).length;
+
+
+  const taskMap: Record<string, typeof totalTasks> = {
+  "/important-tasks": totalImportantTasks,
+  "/completed-tasks": totalCompletedTasks,
+  "/incomplete-tasks": totalIncompletedTasks,
+  "/today-tasks": totalTodaysTasks,
+};
+
+const totalTasksLength = taskMap[pathname] ?? totalTasks;
 
   const currentDate = useMemo(
   () => new Date().toLocaleDateString("en-US", {
@@ -19,7 +56,40 @@ const Navbar = () => {
   []
 );
 
-  const pathname = useLocation().pathname;
+useEffect(() => {
+    filterAndSortTasks();
+  }, [tasks, searchQuery, sortBy]);
+
+  const filterAndSortTasks = () => {
+    let filtered = tasks.filter((task) =>
+      task.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    switch (sortBy) {
+      case "Date (newest)":
+        filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        break;
+      case "Date (oldest)":
+        filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        break;
+      case "Completed":
+        filtered.sort((a, b) => Number(b.isCompleted) - Number(a.isCompleted));
+        break;
+      case "Incomplete":
+        filtered.sort((a, b) => Number(a.isCompleted) - Number(b.isCompleted));
+        break;
+      case "Important":
+        filtered.sort((a, b) => Number(b.isImportant) - Number(a.isImportant));
+        break;
+      case "Default":
+      default:
+        // no sorting
+        break;
+    }
+
+    setSortedTasks(filtered);
+  }
+
 
   return (
     <>
@@ -30,8 +100,8 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search task"
-            value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full md:w-72 h-13 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 px-4 py-2 text-xl focus:outline-none focus:ring-2 focus:ring-primary-100/30 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400"
           />
           <svg
@@ -57,21 +127,7 @@ const Navbar = () => {
 
         {/* Notification & Add Task */}
         <div className="flex items-center gap-4">
-          <button className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100">
-            <svg
-              width="27"
-              height="27"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-            </svg>
-          </button>
+
           <button
             onClick={() => setIsModalOpen(true)}
             className="bg-purple-600 dark:bg-primary-100 text-white rounded-lg px-6 py-3 hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors"
@@ -86,17 +142,25 @@ const Navbar = () => {
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
           <h2 className="text-2xl font-semibold text-gray-500 dark:text-gray-300">
             {NavigationDashbord.find((item) => item.href === pathname)?.label || ""}{" "}
-            ({tasks.length} tasks)
+            ({totalTasksLength} tasks)
+
           </h2>
-          <div className="flex items-center">
-            <select className="border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-100/30">
-              <option>Sort by</option>
+          {pathname !== "/today-tasks" && <div className="flex items-center">
+
+            <select className="border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-100/30" onChange={(e) => setSortBy(e.target.value)}>
+
+              <option>Default</option>
               <option>Date (newest)</option>
               <option>Date (oldest)</option>
-              <option>Completed</option>
-              <option>Important</option>
+              {pathname !== "/completed-tasks" && pathname !== "/incomplete-tasks" && <option>Completed</option>}
+
+              {pathname !== "/important-tasks" && <option>Important</option>}
+              {pathname !== "/incomplete-tasks" && pathname !== "/completed-tasks" && <option>Incomplete</option>}
+
+
+
             </select>
-          </div>
+          </div>}
         </div>
 
         {/* View Toggle */}
